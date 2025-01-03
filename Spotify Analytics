@@ -1,0 +1,64 @@
+-- For this project, I downloaded Spotify data from Kaggle.
+-- Then I created a table to insert Spotify data into.
+-- Finally, I performed analytics on the data using SQL.
+ 
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+song_key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+song_mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness decimal(8,7) NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL );
+
+--Then I inserted the Spotify Data .csv into the table.
+-- Next, I explored the data using the following SQL. 
+SELECT * FROM BIT_DB.Spotifydata;
+
+-- Who are the top 10 most popular artists?
+SELECT distinct artist_name, popularity 
+FROM BIT_DB.Spotifydata
+ORDER BY popularity desc
+LIMIT 10;
+
+-- Who is the least popular artist?
+SELECT distinct artist_name, popularity
+FROM BIT_DB.Spotifydata
+ORDER BY popularity asc
+LIMIT 1;
+
+-- What artist has the most energy?
+SELECT distinct artist_name, energy
+FROM BIT_DB.Spotifydata
+ORDER BY energy desc
+LIMIT 1;
+
+-- What is the average danceability?
+SELECT avg(danceability)
+FROM BIT_DB.Spotifydata;
+
+-- Calculate the average popularity for the artists in the Spotify data table. 
+--Then, for every artist with an average popularity of 90 or above, 
+-- show their name, their average popularity, and label them as a “Top Star”.
+-- This is my first time using a Common Table Expression (CTE)
+WITH popularity_avg_CTE AS (
+SELECT artist_name, AVG(popularity) as avg_pop
+FROM Spotifydata 
+GROUP BY artist_name
+)
+
+SELECT artist_name, avg_pop 
+,'TOP STAR' as tag
+FROM popularity_avg_CTE
+WHERE avg_pop >= 90;
